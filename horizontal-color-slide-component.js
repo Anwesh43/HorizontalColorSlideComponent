@@ -12,8 +12,8 @@ class HorizontalColorSlideComponent extends HTMLElement {
     populateColors() {
         this.colors = []
         const children = this.children
-        for(var i=0;children.length;i++) {
-            this.colors.push(children[i].getAttribute('color'))
+        for(var i=0;i<children.length;i++) {
+            this.colors.push(children[i].innerHTML)
         }
     }
     connectedCallback() {
@@ -31,7 +31,8 @@ class HorizontalColorSlideComponent extends HTMLElement {
         if(!this.container) {
             this.container = new ColorSlideContainer(this.colors)
         }
-        this.div.style.background = canvas.toDataURL()
+        this.container.draw(context)
+        this.div.style.background = `url(${canvas.toDataURL()})`
     }
 }
 class ColorSlideContainer {
@@ -51,17 +52,18 @@ class ColorSlideContainer {
         context.restore()
     }
     update() {
-        this.x += this.dir * w/5
-    }
-    stopped() {
+        this.x -= this.dir * w/5
         if(this.prevX - this.x > w) {
             this.x = this.prevX - w
             this.prevX = this.x
             this.dir = 0
         }
     }
+    stopped() {
+        return this.dir == 0
+    }
     start() {
-        if(this.dir == 0) {
+        if(this.dir == 0 && this.x > -1*(this.colors.length -1)*w) {
             this.dir = 1
         }
     }
@@ -89,14 +91,17 @@ class AnimationHandler {
     startAnimation() {
         if(this.animated == false) {
             this.animated = true
+            this.container.start()
+            console.log(this.container)
             const interval = setInterval(()=>{
                  this.component.render()
                  this.container.update()
-                 if(this.component.stopped() == true) {
+                 if(this.container.stopped() == true) {
                     this.animated = false
+                    console.log(this.animated)
                     clearInterval(interval)
                  }
-            },50)
+            },100)
         }
     }
 }
