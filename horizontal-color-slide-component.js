@@ -18,7 +18,10 @@ class HorizontalColorSlideComponent extends HTMLElement {
     }
     connectedCallback() {
         this.render()
-        this.animationHandler = new AnimationHandler(this,)
+        this.animationHandler = new AnimationHandler(this,this.container)
+        this.div.onmousedown = (event) => {
+            this.animationHandler.startAnimation()
+        }
     }
     render() {
         const canvas = document.createElement('canvas')
