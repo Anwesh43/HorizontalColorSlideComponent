@@ -27,3 +27,32 @@ class HorizontalColorSlideComponent extends HTMLElement {
         this.div.style.background = canvas.toDataURL()
     }
 }
+class ColorSlideContainer {
+    constructor(colors) {
+        this.colors = colors
+        this.index = 0
+        this.x = 0
+        this.prevX = 0
+        this.dir = 0
+    }
+    draw(context) {
+        context.save()
+        context.translate(this.x,0)
+        context.restore()
+    }
+    update() {
+        this.x += this.dir * w/5
+    }
+    stopped() {
+        if(this.prevX - this.x > w) {
+            this.x = this.prevX - w
+            this.prevX = this.x
+            this.dir = 0
+        }
+    }
+    start() {
+        if(this.dir == 0) {
+            this.dir = 1
+        }
+    }
+}
