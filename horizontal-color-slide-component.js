@@ -29,7 +29,7 @@ class HorizontalColorSlideComponent extends HTMLElement {
 }
 class ColorSlideContainer {
     constructor(colors) {
-        this.colors = colors
+        this.colors = colors.map((color,index)=>new ColorSlide(color,index*w))
         this.index = 0
         this.x = 0
         this.prevX = 0
@@ -38,6 +38,9 @@ class ColorSlideContainer {
     draw(context) {
         context.save()
         context.translate(this.x,0)
+        this.colors.forEach((color)=>{
+            color.draw(context)
+        })
         context.restore()
     }
     update() {
