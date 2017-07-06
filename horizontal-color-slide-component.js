@@ -56,3 +56,18 @@ class ColorSlideContainer {
         }
     }
 }
+
+class ColorSlide {
+    constructor(color,x) {
+        this.x = x
+        this.color = color
+    }
+    draw(context) {
+        context.save()
+        context.translate(this.x,0)
+        context.fillStyle = this.color
+        context.fillRect(0,0,w,h)
+        context.restore()
+    }
+}
+customElements.define('horizontal-color-slide-component',HorizontalColorSlideComponent)
