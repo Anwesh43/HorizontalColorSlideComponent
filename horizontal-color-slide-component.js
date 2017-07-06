@@ -18,12 +18,16 @@ class HorizontalColorSlideComponent extends HTMLElement {
     }
     connectedCallback() {
         this.render()
+        this.animationHandler = new AnimationHandler(this,)
     }
     render() {
         const canvas = document.createElement('canvas')
         canvas.width = w
         canvas.height = h
         const context = canvas.getContext('2d')
+        if(!this.container) {
+            this.container = new ColorSlideContainer(this.colors)
+        }
         this.div.style.background = canvas.toDataURL()
     }
 }
@@ -71,6 +75,26 @@ class ColorSlide {
         context.fillStyle = this.color
         context.fillRect(0,0,w,h)
         context.restore()
+    }
+}
+class AnimationHandler {
+    constructor(component,container) {
+        this.animated = false
+        this.component = component
+        this.container = container
+    }
+    startAnimation() {
+        if(this.animated == false) {
+            this.animated = true
+            const interval = setInterval(()=>{
+                 this.component.render()
+                 this.container.update()
+                 if(this.component.stopped() == true) {
+                    this.animated = false
+                    clearInterval(interval)
+                 }
+            },50)
+        }
     }
 }
 customElements.define('horizontal-color-slide-component',HorizontalColorSlideComponent)
